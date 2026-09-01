@@ -1,0 +1,18 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>cron-sensei</title>
+  </head>
+  <body>
+    <main>
+      <h1>cron-sensei</h1>
+      <input id="expression" type="text" spellcheck="false" autocomplete="off"
+             value="30 9 * * 1" aria-label="cron expression" />
+      <p id="description"></p>
+      <ol id="runs"></ol>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>
