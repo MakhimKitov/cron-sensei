@@ -20,4 +20,12 @@ describe("explain", () => {
   ])("%s → %s", (expr, expected) => {
     expect(sentence(expr)).toBe(expected);
   });
+
+  it("explains names identically to their numbers — no new wording", () => {
+    expect(sentence("0 9 * * MON")).toBe(sentence("0 9 * * 1"));
+    expect(sentence("0 9 * * mon")).toBe(sentence("0 9 * * 1"));
+    expect(sentence("0 0 * JAN *")).toBe(sentence("0 0 * 1 *"));
+    expect(sentence("0 9 * * SUN")).toBe(sentence("0 9 * * 0"));
+    expect(sentence("0 9 * * 7")).toBe(sentence("0 9 * * 0"));
+  });
 });
