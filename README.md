@@ -3,9 +3,10 @@
 Paste a cron expression, get it in plain words — plus the next five runs.
 
 Speaks the five-field syntax (`minute hour day-of-month month day-of-week`)
-with `*`, plain numbers and comma lists. Ranges, steps, names, `@aliases`,
-timezones and the POSIX day-of-month/day-of-week rule are tracked in the
-issues — the error messages point at what is missing.
+with `*`, plain numbers, comma lists, and three-letter month/day-of-week
+names (case-insensitive; `7` is also accepted as Sunday). Ranges, steps,
+`@aliases`, timezones and the POSIX day-of-month/day-of-week rule are
+tracked in the issues — the error messages point at what is missing.
 
 ## Develop
 
