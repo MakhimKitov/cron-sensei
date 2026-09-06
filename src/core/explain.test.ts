@@ -14,7 +14,7 @@ describe("explain", () => {
     ["30 14 * * 1", "at 14:30 on Monday"],
     ["0 9 1,15 * *", "at 09:00 on day 1 and 15 of the month"],
     ["0 0 * 12 *", "at 00:00 every day in December"],
-    ["0 0 13 * 5", "at 00:00 on day 13 of the month and on Friday"],
+    ["0 0 13 * 5", "at 00:00 on day 13 of the month or on Friday"],
     ["* * * * 0,6", "every minute on Sunday and Saturday"],
     ["0 6 * 1,2,3 *", "at 06:00 every day in January, February and March"],
   ])("%s → %s", (expr, expected) => {

@@ -36,18 +36,19 @@ describe("nextRuns", () => {
   });
 });
 
-describe("matches — seed day-of-month/day-of-week semantics", () => {
-  // Deliberately AND when both are restricted; POSIX says OR. Pinned here so
-  // the fix (tracked as an issue) has to flip these expectations explicitly.
+describe("matches — POSIX day-of-month/day-of-week OR semantics", () => {
+  // When both are restricted, POSIX (and Vixie cron) run the job when
+  // *either* matches — not only when both agree.
   const fridayThe13th = parse("0 0 13 * 5");
 
-  it("matches only when both day fields agree", () => {
-    expect(matches(fridayThe13th, new Date(2026, 1, 13, 0, 0))).toBe(true); // Fri Feb 13
-    expect(matches(fridayThe13th, new Date(2026, 0, 13, 0, 0))).toBe(false); // Tue Jan 13
-    expect(matches(fridayThe13th, new Date(2026, 0, 2, 0, 0))).toBe(false); // Fri Jan 2
+  it("matches when either day field agrees", () => {
+    expect(matches(fridayThe13th, new Date(2026, 1, 13, 0, 0))).toBe(true); // Fri Feb 13 — both agree
+    expect(matches(fridayThe13th, new Date(2026, 0, 13, 0, 0))).toBe(true); // Tue Jan 13 — day-of-month matches
+    expect(matches(fridayThe13th, new Date(2026, 0, 2, 0, 0))).toBe(true); // Fri Jan 2 — day-of-week matches
+    expect(matches(fridayThe13th, new Date(2026, 0, 3, 0, 0))).toBe(false); // Sat Jan 3 — neither matches
   });
 
-  it("nextRuns inherits the AND rule", () => {
-    expect(nextRuns(fridayThe13th, jan1, 1)).toEqual([new Date(2026, 1, 13, 0, 0)]);
+  it("nextRuns follows the OR rule", () => {
+    expect(nextRuns(fridayThe13th, jan1, 1)).toEqual([new Date(2026, 0, 2, 0, 0)]);
   });
 });
