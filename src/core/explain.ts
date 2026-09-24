@@ -21,7 +21,13 @@ export function explain(expr: CronExpr): string {
   if (expr.dayOfWeek !== null) {
     dates.push(`on ${list(expr.dayOfWeek.map((d) => DAYS[d]!))}`);
   }
-  if (dates.length > 0) parts.push(dates.join(" and "));
+  if (dates.length > 0) {
+    // POSIX: when both day-of-month and day-of-week are restricted, the
+    // command runs if either matches — join with "or" to reflect that. A
+    // single restricted day field has nothing to join.
+    const joiner = expr.dayOfMonth !== null && expr.dayOfWeek !== null ? " or " : " and ";
+    parts.push(dates.join(joiner));
+  }
   if (expr.month !== null) {
     parts.push(`in ${list(expr.month.map((m) => MONTHS[m - 1]!))}`);
   }

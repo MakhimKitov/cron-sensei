@@ -3,19 +3,24 @@ import type { CronExpr } from "./parse";
 /**
  * Does the wall-clock minute of `date` (local time) match the expression?
  *
- * Seed semantics: every restricted field must match — including day-of-month
- * AND day-of-week together, which diverges from POSIX (both restricted means
- * OR there). Tracked as an issue; the tests pin the current behavior.
+ * POSIX day-field semantics: when both day-of-month and day-of-week are
+ * restricted, the day condition is satisfied if *either* matches (OR). When
+ * only one of the two is restricted, that field alone gates the day as usual.
  */
 export function matches(expr: CronExpr, date: Date): boolean {
   const ok = (field: number[] | null, value: number): boolean =>
     field === null || field.includes(value);
+  const dayOk = ((): boolean => {
+    if (expr.dayOfMonth !== null && expr.dayOfWeek !== null) {
+      return expr.dayOfMonth.includes(date.getDate()) || expr.dayOfWeek.includes(date.getDay());
+    }
+    return ok(expr.dayOfMonth, date.getDate()) && ok(expr.dayOfWeek, date.getDay());
+  })();
   return (
     ok(expr.minute, date.getMinutes()) &&
     ok(expr.hour, date.getHours()) &&
-    ok(expr.dayOfMonth, date.getDate()) &&
-    ok(expr.month, date.getMonth() + 1) &&
-    ok(expr.dayOfWeek, date.getDay())
+    dayOk &&
+    ok(expr.month, date.getMonth() + 1)
   );
 }
 
